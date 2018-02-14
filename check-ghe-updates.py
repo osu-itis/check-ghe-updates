@@ -39,18 +39,28 @@ def main():
     r = requests.get(CHECK_GHE_UPDATES_SOURCE)
     current_json = json.loads(r.text)
 
-    # save current version to cache
-    with open(CHECK_GHE_UPDATES_CACHE, 'w') as f:
-        json.dump(current_json, f)
-
     # check for version change
     if previous_check['latest'] != current_json['latest']:
+        # indicate change in cache file
+        current_json['has_update'] = True
+
+        # save cache
+        with open(CHECK_GHE_UPDATES_CACHE, 'w') as f:
+            json.dump(current_json, f)
+
+        # send email
         output = "version change detected: {} -> {}".format(previous_check['latest'], current_json['latest'])
         subject = "new GitHub Enterprise release is available: {}".format(current_json['latest'])
         if DEBUG: print output
         send_email(subject, output)
         if DEBUG: print "email sent!"
     else:
+        current_json['has_update'] = False
+
+        # save cache
+        with open(CHECK_GHE_UPDATES_CACHE, 'w') as f:
+            json.dump(current_json, f)
+
         if DEBUG: print "latest version has not changed (is: {})".format(current_json['latest'])
 
 
