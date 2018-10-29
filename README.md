@@ -4,8 +4,8 @@ A python script that checks for new GitHub Enterprise releases and sends email a
 
 ## Requirements
 
-* python 2.7.x
-* [Requests](http://docs.python-requests.org/) > 2.9.x
+* Python 2.7.x
+* [Requests](http://docs.python-requests.org/) >= 2.20.x
 
 ## Configuration
 
